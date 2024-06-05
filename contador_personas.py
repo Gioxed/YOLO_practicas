@@ -43,7 +43,8 @@ while True:
     
     imgGraphics = cv2.resize(imgGraphics, (0, 0), fx=0.5, fy=0.5)
     
-    img = cvzone.overlayPNG(img, imgGraphics, (730, 260))
+    #ubicacion de la imagen
+    img = cvzone.overlayPNG(img, imgGraphics, (800, 260))
     results = model(imgRegion, stream=True)
     
     detections = np.empty((0, 5))
@@ -74,7 +75,7 @@ while True:
                 detections = np.vstack((detections, currentArray))
             
     resultsTracker = tracker.update(detections)
-    cv2.line(img, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 3) #,5 espesor
+    cv2.line(img, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 0, 255), 3) #,3 espesor
     cv2.line(img, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 0, 255), 3)
     #identificador
     for result in resultsTracker:
@@ -89,13 +90,22 @@ while True:
         cx, cy = x1+w//2, y1+h//2
         cv2.circle(img,(cx, cy), 5, (255,0,255), cv2.FILLED) #cuando el ciculo cae en la región, realiza el conteo
         
-    #     if limits[0] < cx < limits[2] and limits[1] - 20 < cy < limits[1] + 0:
-    #         if totalCount.count(Id) == 0:
-    #             totalCount.append(Id) #contar el numero por la id
-    #             cv2.line(img, (limits[0], limits[1]), (limits[2], limits[3]), (0, 255, 0), 3)
+        #contador personas subiendo
+        if limitsUp[0] < cx < limitsUp[2] and limitsUp[1] - 20 < cy < limitsUp[1] + 0:
+            if totalCountUp.count(Id) == 0:
+                totalCountUp.append(Id) #contar el numero por la id
+                cv2.line(img, (limitsUp[0], limitsUp[1]), (limitsUp[2], limitsUp[3]), (0, 255, 0), 3)
             
+        #contador personas bajando
+        if limitsDown[0] < cx < limitsDown[2] and limitsDown[1] - 20 < cy < limitsDown[1] + 0:
+            if totalCountDown.count(Id) == 0:
+                totalCountDown.append(Id) #contar el numero por la id
+                cv2.line(img, (limitsDown[0], limitsDown[1]), (limitsDown[2], limitsDown[3]), (0, 255, 0), 3)
+                
     # #cvzone.putTextRect(img, f"Contador:{len(totalCount)}", (50, 50))
-    # cv2.putText(img, str(len(totalCount)), (255, 100), cv2.FONT_HERSHEY_PLAIN, 5, (0, 0, 0), 8)
+    #ubicacion del contador
+    cv2.putText(img, str(len(totalCountUp)), (1050, 345), cv2.FONT_HERSHEY_PLAIN, 5, (255, 0, 0), 7)
+    cv2.putText(img, str(len(totalCountDown)), (1050, 450), cv2.FONT_HERSHEY_PLAIN, 5, (50, 50, 230), 7)
             
     cv2.imshow("Imagenes", img)
     #cv2.imshow("ImageRegion", imgRegion)
