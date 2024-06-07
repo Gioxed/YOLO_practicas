@@ -30,8 +30,8 @@ mask = cv2.imread("Imagenes/mask3.png")
 tracker = Sort(max_age=20, min_hits=3, iou_threshold=0.3)
 
 #limites para crear una linea y cada vez que pasa de ese punto me cuenta el objeto
-#limits = [400, 100, 400, 350]
-limits = [150, 200, 550, 200]
+limits = [400, 100, 400, 350]
+#limits = [150, 200, 550, 200]
 
 totalCount = []
 
@@ -88,7 +88,7 @@ while True:
         cx, cy = x1+w//2, y1+h//2
         cv2.circle(img,(cx, cy), 5, (255,0,255), cv2.FILLED) #cuando el ciculo cae en la región, realiza el conteo
         
-        if limits[0] < cx < limits[2] and limits[1] - 20 < cy < limits[1] + 0:
+        if limits[0] - 20 < cx < limits[0] + 20:
             if totalCount.count(Id) == 0:
                 totalCount.append(Id) #contar el numero por la id
                 cv2.line(img, (limits[0], limits[1]), (limits[2], limits[3]), (0, 255, 0), 3)
